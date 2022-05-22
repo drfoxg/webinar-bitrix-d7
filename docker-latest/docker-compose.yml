@@ -1,0 +1,56 @@
+# We're using version 3.7 of the Docker Compose file format
+version: "3.7"
+
+# Define services/containers
+services:
+  # MySQL container
+  mysqlwebinar:
+    # Use mysql:latest image
+    image: mysql:latest
+    # Data folder
+    volumes:
+      - /home/rustmod/webinar/docker-webinar/mysql-data/:/var/lib/mysql
+    # Connect to "drfoxg-net" network, as defined below
+    networks:
+      - drfoxg-net
+    # Pass a list of environment variables to the container
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+
+  # phpMyAdmin container
+  phpmyadmin:
+    # Use phpmyadmin/phpmyadmin:latest image
+    image: phpmyadmin/phpmyadmin:latest
+    # Connect to "drfoxg-net" network, as defined below
+    networks:
+      - drfoxg-net
+    # Map port 8080 on the host to port 80 inside the container
+    # Syntax is: "HOST_PORT:CONTAINER_PORT"
+    ports:
+      - "8082:80"
+    # Pass a list of environment variables to the container
+    environment:
+      PMA_HOST: mysqlwebinar
+    # Wait for "mysql" container to start first
+    depends_on:
+      - mysqlwebinar
+      
+  # laravel 8 + vue 2 container
+  webinar:
+    image: drfoxg/webinar
+    build:
+      context: ../docker-webinar
+    volumes:
+      - /home/rustmod/webinar/docker-webinar/www/:/var/www/webinar
+    networks:
+      - drfoxg-net
+    ports:
+      - "80:80"
+    cap_add:
+       - ALL
+    environment:
+       XDEBUG_CONFIG: remote_host=192.168.1.90
+
+# Define networks
+networks:
+  drfoxg-net:

@@ -1,0 +1,6 @@
+!.gitignore
+mysql-data/*
+**node_modules
+**vendor
+www/*
+www1/*

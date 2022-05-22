@@ -1,0 +1,8 @@
+builddocker-sudo.sh
+/laravel8_composer
+/laravel8_composer_old
+/www1
+startdocker-sudo.sh
+stopdocker.sh
+todev.sh
+toprod.sh

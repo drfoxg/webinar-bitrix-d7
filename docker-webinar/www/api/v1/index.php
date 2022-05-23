@@ -13,7 +13,7 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_befo
 
 Loader::includeModule("iblock");
 
-$iblockId = 1;
+$iblockId = 23;
 
 dump($webinars = Iblock::wakeUp($iblockId)->getEntityDataClass());
 
@@ -41,16 +41,60 @@ foreach($elements as $element) {
 
 $count = 1;
 $themeNumbers = [1, 3, 10];
+$monthNumbers = [5,6];
 $month = 6;
 
+function getDataFilter(array $months) : array
+{
+    $count = count($months);
 
-$currentYear = date('Y');
-$number = cal_days_in_month(CAL_GREGORIAN, $month, $currentYear);
-$dateStart = new DateTime($currentYear.'-' . $month . '-01');
-$dateEnd = new DateTime($currentYear.'-' . $month . '-' . $number);
+    if ($count == 1) {
+        return formatStartEnd($months[0],'>=DATA.VALUE', '<=DATA.VALUE');
+    }
 
-dump($dateStart->format('d-m-Y H:i:s'));
-dump($dateEnd->format('d-m-Y 23:59:59'));
+    $filter = [
+        'LOGIC' => 'OR'
+    ];
+
+    foreach ($months as $month) {
+        array_push($filter, formatStartEnd($month, '>=DATA.VALUE', '<=DATA.VALUE'));
+    }
+
+    return $filter;
+}
+
+/**
+ * @throws Exception
+ */
+function formatStartEnd(int $month, string $conditionStar, string $conditionEnd, string $year = '') : array
+{
+    // валидация входных данных
+    if (!((1 <= $month) && ($month <= 12))) {
+        throw new Exception("Not month");
+    }
+
+    if ($year === '') {
+        $year = date('Y');
+    }
+
+    $number = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+    $dateStart = (new DateTime($year . '-' . $month . '-1' . ' ' . '00:00:00'));
+    $dateEnd   = (new DateTime($year . '-' . $month . '-' . $number . ' ' . '23:59:59'));
+
+    $result[$conditionStar] = $dateStart->format('Y-m-d H:i:s');
+    $result[$conditionEnd]  = $dateEnd->format('Y-m-d H:i:s');
+
+    /*
+    dump($dateStart);
+    dump($dateEnd);
+    */
+
+    return $result;
+}
+
+dump(getDataFilter($monthNumbers));
+$arFilter = getDataFilter($monthNumbers);
 
 /*
 $entityPropsSingle = Bitrix\Main\Entity\Base::compileEntity(
@@ -66,12 +110,8 @@ $entityPropsSingle = Bitrix\Main\Entity\Base::compileEntity(
 );
 */
 
-dump($entityPropsSingle);
-
-//dump($entityPropsSingle->getDataClass());
-
-$arFilter['>=DATA.VALUE'] = $dateStart->format('Y-m-d H:i:s');
-$arFilter['<=DATA.VALUE'] = $dateEnd->format('Y-m-d 23:59:59');
+//$arFilter['>=DATA.VALUE'] = $dateStart->format('Y-m-d H:i:s');
+//$arFilter['<=DATA.VALUE'] = $dateEnd->format('Y-m-d 23:59:59');
 $arFilter['=ACTIVE'] = 'Y';
 
 dump($arFilter);
@@ -79,10 +119,9 @@ dump($arFilter);
 global $DB;
 $DB->ShowSqlStat = true;
 // и поехали
-//$debug = new CDebugInfo();
-$debug = new RemDebug();
+$debug = new CDebugInfo();
+//$debug = new RemDebug();
 $debug->Start();
-
 
 \Bitrix\Main\Application::getConnection()->startTracker(false);
 
@@ -102,8 +141,7 @@ $elements =  $webinars::getList([
     ],
 ])->fetchCollection();
 
-//$debug->Stop();
-
+$debug->Stop();
 
 foreach($elements as $element) {
 
@@ -111,14 +149,18 @@ foreach($elements as $element) {
         dump('Айди: '.$element->getId());
         dump('Название: '.$element->getName());
         dump('Дата\время: '.$element->getData()->getValue());
-        dump('Тема: '.$element->getThemeId()->getElement()->getName());
+        //dump('Тема: '.$element->getThemeId()->getElement()->getName());
+        foreach($element->getThemeId()->getAll() as $element) {
+            dump('Тема: '.$element->getElement()->getName());
+        }
+
     //}
 
     $count++;
 }
 
 echo '<pre>', $debug->Output(), '</pre>';
-//Application::getConnection()->startTracker(false);
+Application::getConnection()->startTracker(false);
 
 $catalogSectionsIterator = $webinars::getList([
     'select' => ['ID', 'NAME', 'DATA', 'THEME_ID.ELEMENT'],
@@ -136,8 +178,6 @@ $catalogSectionsIterator = $webinars::getList([
     ],
 ]);
 
-//echo '<pre>', $catalogSectionsIterator->getTrackerQuery()->getSql(), '</pre>';
+echo '<pre>', $catalogSectionsIterator->getTrackerQuery()->getSql(), '</pre>';
 
-//\Bitrix\Main\Application::getConnection()->stopTracker();
-
-//echo '<pre>', $sql = $elements->getTrackerQuery()->getSql(), '</pre>';
+\Bitrix\Main\Application::getConnection()->stopTracker();

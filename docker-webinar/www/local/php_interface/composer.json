@@ -1,5 +1,25 @@
 {
+    "name": "drfoxg/webinar",
+    "config": {
+        "platform-check": false
+    },
     "require": {
-        "symfony/var-dumper": "^5.4"
+        "php": "^7.4",
+        "symfony/var-dumper": "^5.4",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "ext-simplexml": "*",
+        "ext-intl": "*",
+        "ext-dom": "*",
+        "ext-openssl": "*",
+        "ext-iconv": "*",
+        "ext-soap": "*",
+        "ext-exif": "*",
+        "ext-zip": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "local\\webinar\\": "webinar/"
+        }
     }
 }

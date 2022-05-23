@@ -9,13 +9,13 @@ services:
     image: mysql:latest
     # Data folder
     volumes:
-      - /home/rustmod/webinar/docker-webinar/mysql-data/:/var/lib/mysql
+      - /home/rustmod/webinar-bitrix-d7/docker-webinar/mysql-data/:/var/lib/mysql
     # Connect to "drfoxg-net" network, as defined below
     networks:
       - drfoxg-net
     # Pass a list of environment variables to the container
     environment:
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: go6587go
 
   # phpMyAdmin container
   phpmyadmin:
@@ -41,7 +41,7 @@ services:
     build:
       context: ../docker-webinar
     volumes:
-      - /home/rustmod/webinar/docker-webinar/www/:/var/www/webinar
+      - /home/rustmod/webinar-bitrix-d7/docker-webinar/www/:/var/www/webinar
     networks:
       - drfoxg-net
     ports:

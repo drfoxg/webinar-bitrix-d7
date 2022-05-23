@@ -10,11 +10,9 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_befo
 
 Loader::includeModule("iblock");
 
-$iblockId = 23;
+$iblockId = 1;
 
 dump($webinars = Iblock::wakeUp($iblockId)->getEntityDataClass());
-
-
 
 dump(Configuration::getValue('composer'));
 
@@ -75,6 +73,12 @@ $arFilter['=ACTIVE'] = 'Y';
 
 dump($arFilter);
 
+global $DB;
+$DB->ShowSqlStat = true;
+// и поехали
+$debug = new CDebugInfo();
+$debug->Start();
+
 \Bitrix\Main\Application::getConnection()->startTracker(false);
 
 $elements =  $webinars::getList([
@@ -92,6 +96,9 @@ $elements =  $webinars::getList([
         ],
     ],
 ])->fetchCollection();
+
+$debug->Stop();
+echo '<pre>', $debug->Output(), '</pre>';
 
 foreach($elements as $element) {
 
@@ -123,7 +130,7 @@ $catalogSectionsIterator = $webinars::getList([
     ],
 ]);
 
-echo '<pre>', $catalogSectionsIterator->getTrackerQuery()->getSql(), '</pre>';
+//echo '<pre>', $catalogSectionsIterator->getTrackerQuery()->getSql(), '</pre>';
 
 \Bitrix\Main\Application::getConnection()->stopTracker();
 

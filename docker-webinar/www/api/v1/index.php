@@ -94,7 +94,7 @@ function formatStartEnd(int $month, string $conditionStar, string $conditionEnd,
 }
 
 dump(getDataFilter($monthNumbers));
-$arFilter = getDataFilter($monthNumbers);
+$arFilter[] = getDataFilter($monthNumbers);
 
 /*
 $entityPropsSingle = Bitrix\Main\Entity\Base::compileEntity(

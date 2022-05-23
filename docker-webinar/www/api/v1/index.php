@@ -3,10 +3,13 @@ use \Bitrix\Main\Application;
 use \Bitrix\Main\Config\Configuration;
 use \Bitrix\Main\Loader;
 use \Bitrix\Iblock\Iblock;
-use \Bitrix\Iblock\SectionTable;
+//use \Bitrix\Iblock\SectionTable;
+use \SomeModule\Webinar\RemDebug;
 //use \Bitrix\Iblock\Elements\ElementV1m1p0nWEBINARTable;
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+
+//require_once($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/SomeModule/Webinar/RemDebug.php");
 
 Loader::includeModule("iblock");
 
@@ -76,8 +79,10 @@ dump($arFilter);
 global $DB;
 $DB->ShowSqlStat = true;
 // и поехали
-$debug = new CDebugInfo();
+//$debug = new CDebugInfo();
+$debug = new RemDebug();
 $debug->Start();
+
 
 \Bitrix\Main\Application::getConnection()->startTracker(false);
 
@@ -97,8 +102,8 @@ $elements =  $webinars::getList([
     ],
 ])->fetchCollection();
 
-$debug->Stop();
-echo '<pre>', $debug->Output(), '</pre>';
+//$debug->Stop();
+
 
 foreach($elements as $element) {
 
@@ -112,7 +117,8 @@ foreach($elements as $element) {
     $count++;
 }
 
-Application::getConnection()->startTracker(false);
+echo '<pre>', $debug->Output(), '</pre>';
+//Application::getConnection()->startTracker(false);
 
 $catalogSectionsIterator = $webinars::getList([
     'select' => ['ID', 'NAME', 'DATA', 'THEME_ID.ELEMENT'],
@@ -132,6 +138,6 @@ $catalogSectionsIterator = $webinars::getList([
 
 //echo '<pre>', $catalogSectionsIterator->getTrackerQuery()->getSql(), '</pre>';
 
-\Bitrix\Main\Application::getConnection()->stopTracker();
+//\Bitrix\Main\Application::getConnection()->stopTracker();
 
 //echo '<pre>', $sql = $elements->getTrackerQuery()->getSql(), '</pre>';

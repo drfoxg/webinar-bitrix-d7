@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "local\\webinar\\": "webinar/"
+            "SomeModule\\Webinar\\": "SomeModule/Webinar/"
         }
     }
 }

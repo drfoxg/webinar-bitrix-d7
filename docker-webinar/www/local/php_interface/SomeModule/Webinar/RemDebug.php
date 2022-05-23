@@ -1,7 +1,11 @@
 <?php
 
-namespace Mydeveloperswaycom\Webinar;
+namespace SomeModule\Webinar;
 
+/**
+ * Class RemDebug
+ * @package Api\Webinar
+ */
 class RemDebug
 {
     private $inc_time;
@@ -11,7 +15,7 @@ class RemDebug
 
 
     public function __construct() {
-
+        echo '__constructor';
     }
 
     /**
@@ -42,8 +46,8 @@ class RemDebug
     {
         global $DB, $APPLICATION, $USER;
 
-        if ($USER->IsAdmin())
-        {
+        //if ($USER->IsAdmin())
+        //{
             $this->inc_time = round(getmicrotime()-$this->inc_time, 4);
 
             if(($DB->cntQuery - $this->cnt_query)>0)
@@ -56,6 +60,6 @@ class RemDebug
                     "TRAC"        => ($bTrac == true) ? $DB->arQueryDebug : '',
                 );
             }
-        }
+        //}
     }
 }

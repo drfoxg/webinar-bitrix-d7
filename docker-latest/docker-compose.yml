@@ -35,7 +35,7 @@ services:
     depends_on:
       - mysqlwebinar
       
-  # laravel 8 + vue 2 container
+  # 1c-bitrix d7
   webinar:
     image: drfoxg/webinar
     build:
@@ -45,7 +45,7 @@ services:
     networks:
       - drfoxg-net
     ports:
-      - "80:80"
+      - "9080:80"
     cap_add:
        - ALL
     environment:

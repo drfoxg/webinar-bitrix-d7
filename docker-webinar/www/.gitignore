@@ -2,6 +2,6 @@
 /bitrix
 /upload
 /vendor
-/local/php_interface/vendor
+/local/vendor
 bitrix_server_test.log
 bitrix_server_test.php

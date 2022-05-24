@@ -5,51 +5,51 @@ use \Bitrix\Main\Loader;
 use \Bitrix\Iblock\Iblock;
 //use \Bitrix\Iblock\SectionTable;
 use \SomeModule\Webinar\RemDebug;
-//use \Bitrix\Iblock\Elements\ElementV1m1p0nWEBINARTable;
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+
+$APPLICATION->IncludeComponent(
+    'drfoxg:webinar',
+    '.default',
+    [],
+    false
+);
 
 //require_once($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/SomeModule/Webinar/RemDebug.php");
 
 Loader::includeModule("iblock");
 
-$iblockId = 23;
+$iblockId = 1;
+//$iblockId = 23;
 
 dump($webinars = Iblock::wakeUp($iblockId)->getEntityDataClass());
 
 dump(Configuration::getValue('composer'));
 
-/*
-$elements =  $webinars::getList([
-    'select' => ['ID', 'NAME', 'DATA', 'THEME_ID.ELEMENT'],
-    'filter' => ['=ACTIVE' => 'Y'],
-    'order'  => ['ID' => 'ASC'],
-])->fetchCollection();
-*/
-/*
-foreach($elements as $element) {
-
-    //dump($element);
-
-    dump('Айди: '.$element->getId());
-    dump('Название: '.$element->getName());
-    dump('Дата\время: '.$element->getData()->getValue());
-    dump('Тема: '.$element->getThemeId()->getElement()->getName());
-
-}
-*/
-
 $count = 1;
-$themeNumbers = [1, 3, 10];
-$monthNumbers = [5,6];
+//$themeNumbers = [1, 2, 1000];
+$themeNumbers = [3, 9];
+//$themeNumbers = [1];
+//$themeNumbers = [];
+$monthNumbers = [5, 6, 7];
+//$monthNumbers = [];
 $month = 6;
 
-function getDataFilter(array $months) : array
+/**
+ * @param array $months
+ * @return array|string[]
+ * @throws Exception
+ */
+function getDataFilter(array $months): array
 {
     $count = count($months);
 
+    if ($count == 0) {
+        throw new Exception("No data");
+    }
+
     if ($count == 1) {
-        return formatStartEnd($months[0],'>=DATA.VALUE', '<=DATA.VALUE');
+        return formatStartEnd($months[0], '>=DATA.VALUE', '<=DATA.VALUE');
     }
 
     $filter = [
@@ -64,11 +64,17 @@ function getDataFilter(array $months) : array
 }
 
 /**
+ * @param int $month
+ * @param string $conditionStar
+ * @param string $conditionEnd
+ * @param string $year
+ * @return array
  * @throws Exception
  */
 function formatStartEnd(int $month, string $conditionStar, string $conditionEnd, string $year = '') : array
 {
     // валидация входных данных
+    // TODO: добавить константы месяцев
     if (!((1 <= $month) && ($month <= 12))) {
         throw new Exception("Not month");
     }
@@ -93,65 +99,70 @@ function formatStartEnd(int $month, string $conditionStar, string $conditionEnd,
     return $result;
 }
 
+/**
+ * @param array $arFilter
+ * @param array $themes
+ * @throws Exception
+ */
+function doThemeFilter(array &$arFilter, array $themes) : void
+{
+    $count = count($themes);
+
+    if ($count != 0) {
+        $arFilter[] = ['@THEME_ID.ELEMENT.ID' => $themes];
+    }
+}
+
 dump(getDataFilter($monthNumbers));
+
 $arFilter[] = getDataFilter($monthNumbers);
-
-/*
-$entityPropsSingle = Bitrix\Main\Entity\Base::compileEntity(
-    sprintf('DATA_%s', $iblockId),
-    [
-        'IBLOCK_ELEMENT_ID' => ['data_type' => 'integer'],
-        'VALUE' => ['data_type' => 'string'],
-    ],
-    [
-        'table_name' => sprintf('b_iblock_element_v1m1p0n_we_bi_na_r%s', $iblockId),
-        //'table_name' => 'b_iblock_element_v1m1p0n_we_bi_na_r',
-    ]
-);
-*/
-
-//$arFilter['>=DATA.VALUE'] = $dateStart->format('Y-m-d H:i:s');
-//$arFilter['<=DATA.VALUE'] = $dateEnd->format('Y-m-d 23:59:59');
+doThemeFilter($arFilter, $themeNumbers);
 $arFilter['=ACTIVE'] = 'Y';
 
 dump($arFilter);
+
+
+\Bitrix\Main\Application::getConnection()->startTracker(false);
+
+Application::getConnection()->startTracker(false);
+
+$catalogSectionsIterator = $webinars::getList([
+    'select' => ['ID', 'NAME', 'DATA', 'THEME_ID.ELEMENT'],
+    'filter' => $arFilter,
+    'order'  => ['ID' => 'ASC'],
+]);
+
+echo '<pre>', $catalogSectionsIterator->getTrackerQuery()->getSql(), '</pre>';
+
+\Bitrix\Main\Application::getConnection()->stopTracker();
 
 global $DB;
 $DB->ShowSqlStat = true;
 // и поехали
 $debug = new CDebugInfo();
-//$debug = new RemDebug();
+//$debug1 = new RemDebug();
 $debug->Start();
-
-\Bitrix\Main\Application::getConnection()->startTracker(false);
 
 $elements =  $webinars::getList([
     'select' => ['ID', 'NAME', 'DATA', 'THEME_ID.ELEMENT'],
     'filter' => $arFilter,
     'order'  => ['ID' => 'ASC'],
-    'runtime' => [
-        'DATA.VALUE' => [
-            //'data_type' => $entityPropsSingle->getDataClass(),
-            'data_type' => 'Bitrix\Iblock\ElementTable',
-            'reference' => [
-                '=this.ID' => 'ref.IBLOCK_ELEMENT_ID'
-            ],
-            'join_type' => 'inner'
-        ],
-    ],
 ])->fetchCollection();
+
+echo '<pre>', $debug->Output(), '</pre>';
 
 $debug->Stop();
 
 foreach($elements as $element) {
 
     //if (in_array($count, $themeNumbers)) {
-        dump('Айди: '.$element->getId());
+        dump('Айди Вебинара: '.$element->getId());
         dump('Название: '.$element->getName());
         dump('Дата\время: '.$element->getData()->getValue());
         //dump('Тема: '.$element->getThemeId()->getElement()->getName());
-        foreach($element->getThemeId()->getAll() as $element) {
-            dump('Тема: '.$element->getElement()->getName());
+        foreach ($element->getThemeId()->getAll() as $theme) {
+            dump('Тема: ' . $theme->getElement()->getName());
+            dump('Айди Темы: '.$theme->getElement()->getId());
         }
 
     //}
@@ -159,25 +170,4 @@ foreach($elements as $element) {
     $count++;
 }
 
-echo '<pre>', $debug->Output(), '</pre>';
-Application::getConnection()->startTracker(false);
 
-$catalogSectionsIterator = $webinars::getList([
-    'select' => ['ID', 'NAME', 'DATA', 'THEME_ID.ELEMENT'],
-    'filter' => $arFilter,
-    'order'  => ['ID' => 'ASC'],
-    'runtime' => [
-        'DATA.VALUE' => [
-            //'data_type' => $entityPropsSingle->getDataClass(),
-            'data_type' => 'Bitrix\Iblock\ElementTable',
-            'reference' => [
-                '=this.ID' => 'ref.IBLOCK_ELEMENT_ID'
-            ],
-            'join_type' => 'inner'
-        ],
-    ],
-]);
-
-echo '<pre>', $catalogSectionsIterator->getTrackerQuery()->getSql(), '</pre>';
-
-\Bitrix\Main\Application::getConnection()->stopTracker();

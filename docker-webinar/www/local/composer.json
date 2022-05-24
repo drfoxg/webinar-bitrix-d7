@@ -15,7 +15,8 @@
         "ext-iconv": "*",
         "ext-soap": "*",
         "ext-exif": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "falbar/bitrix": "1.*"
     },
     "autoload": {
         "psr-4": {

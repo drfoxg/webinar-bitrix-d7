@@ -11,7 +11,7 @@ use Drfoxg\Webinar\Webinar;
 class Init extends Webinar
 {
 
-    public array $arResult;
+    public $arResult;
 
     /**
      * Init constructor.
@@ -25,7 +25,8 @@ class Init extends Webinar
         // пример
         // https://dev.1c-bitrix.ru/learning/course/index.php?COURSE_ID=43&LESSON_ID=2305&LESSON_PATH=3913.4565.4790.4777.2305
 
-        $this->arResult['DATE'] = date('Y-m-d');
+        //$this->arResult['DATE'] = date('Y-m-d');
+        //$this->arResult = [];
 
         return true;
     }
@@ -35,9 +36,10 @@ class Init extends Webinar
      */
     protected function do()
     {
+        $this->arResult['DATE'] = date('Y-m-d');
+
         $this->includeComponentTemplate();
 
-        $this->arResult['DATE'] = date('Y-m-d');
 
         return true;
     }

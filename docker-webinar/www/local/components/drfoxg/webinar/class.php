@@ -53,6 +53,7 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
      */
     public function onPrepareComponentParams($arParams = [])
     {
+        $this->errorCollection = new ErrorCollection();
         return parent::onPrepareComponentParams($arParams);
     }
 

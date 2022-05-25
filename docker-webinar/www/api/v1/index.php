@@ -19,10 +19,12 @@ $APPLICATION->IncludeComponent(
 
 Loader::includeModule("iblock");
 
-//$iblockId = 1;
-$iblockId = 23;
+$iblockId = 1;
+//$iblockId = 23;
 
 dump($webinars = Iblock::wakeUp($iblockId)->getEntityDataClass());
+
+dump(bitrix_sessid());
 
 dump(Configuration::getValue('composer'));
 

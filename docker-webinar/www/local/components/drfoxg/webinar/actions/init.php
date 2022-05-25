@@ -2,6 +2,9 @@
 
 namespace Drfoxg\Webinar\Actions;
 
+use CModule;
+use CIBlockElementRights;
+use CIBlockElement;
 use Drfoxg\Webinar\Webinar;
 
 /**
@@ -11,7 +14,7 @@ use Drfoxg\Webinar\Webinar;
 class Init extends Webinar
 {
 
-    public $arResult;
+    public array $arResult;
 
     /**
      * Init constructor.

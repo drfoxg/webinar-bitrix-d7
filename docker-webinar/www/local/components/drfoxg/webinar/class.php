@@ -4,19 +4,31 @@ namespace Drfoxg\Webinar;
 
 use \Bitrix\Main\LoaderException;
 use \Bitrix\Main\Loader;
+use \Bitrix\Main\Error;
+use \Bitrix\Main\Errorable;
+use \Bitrix\Main\ErrorCollection;
+use \Bitrix\Main\Engine\ActionFilter;
+use \Bitrix\Main\Engine\Contract\Controllerable;
+
+use \Bitrix\Main\Diag\Debug;
 
 /**
  * Class Webinar
  * @package Drfoxg\Webinar
  */
-class Webinar extends \CBitrixComponent
+class Webinar extends \CBitrixComponent implements Controllerable, Errorable
 {
+    /**
+     * @var ErrorCollection
+     */
+    protected ErrorCollection $errorCollection;
+
     /**
      * Подключаемые модули
      * @var array
      */
     private $arModules = [
-        'iblock',
+        "iblock",
     ];
 
     /**
@@ -26,9 +38,11 @@ class Webinar extends \CBitrixComponent
     private function prepareAction()
     {
         if ($this->request->isAjaxRequest()) {
+            Debug::writeToFile($this->request->isAjaxRequest(), 'on prepareAction - ret ajax');
             return 'ajax';
         }
 
+        Debug::writeToFile($this->request->isAjaxRequest(), 'on prepareAction - ret init');
         return 'init';
     }
 
@@ -69,6 +83,8 @@ class Webinar extends \CBitrixComponent
      */
     public function executeComponent()
     {
+        Debug::writeToFile(null, 'executeComponent');
+
         try {
             $this->loadModules();
         } catch (\Exception $e) {
@@ -155,5 +171,80 @@ class Webinar extends \CBitrixComponent
         }
 
         return true;
+    }
+
+    public function getErrors(): array
+    {
+        return $this->errorCollection->toArray();
+    }
+
+    public function getErrorByCode($code): Error
+    {
+        return $this->errorCollection->getErrorByCode($code);
+    }
+
+    public function configureActions()
+    {
+        // TODO: Implement configureActions() method.
+        return [
+            'test' => [
+                'prefilters' => [
+                    /*
+                    new ActionFilter\HttpMethod(array(ActionFilter\HttpMethod::METHOD_POST)),
+                    new ActionFilter\Csrf()
+                    */
+                ],
+                'postfilters' => [],
+            ],
+            'webinar' => [
+                'postfilters' => [],
+                'prefilters' => []
+            ]
+        ];
+    }
+
+    //public function testAction($data)
+    public function testAction(string $theme, string $month) :array
+    {
+        try {
+        //Debug::writeToFile($data, 'data - webinarAction');
+
+        Debug::writeToFile($theme, 'theme - testAction');
+        Debug::writeToFile($month, 'month - testAction');
+
+        return [
+            'asd' => $theme,
+            'dsa' => $month,
+            'count' => 200
+        ];
+        } catch (Exceptions $e) {
+            $this->errorCollection[] = new Error($e->getMessage());
+            return [
+                "result" => "Произошла ошибка",
+            ];
+        }
+
+    }
+
+    public function webinarAction(array $theme, array $month) :array
+    {
+        try {
+            //Debug::writeToFile($data, 'data - webinarAction');
+
+            Debug::writeToFile($theme, 'theme - webinarAction');
+            Debug::writeToFile($month, 'month - webinarAction');
+
+            return [
+                'asd' => $theme,
+                'dsa' => $month,
+                'count' => 200
+            ];
+        } catch (Exceptions $e) {
+            $this->errorCollection[] = new Error($e->getMessage());
+            return [
+                "result" => "Произошла ошибка",
+            ];
+        }
+
     }
 }

@@ -1,0 +1,44 @@
+theme - webinarAction:
+eee
+
+month - webinarAction:
+ddd
+
+executeComponent:
+
+
+on prepareAction - ret init:
+
+
+theme - webinarAction:
+Array
+(
+    [0] => 1
+    [1] => 2
+)
+
+
+month - webinarAction:
+Array
+(
+    [0] => 5
+    [1] => 6
+)
+
+
+theme - webinarAction:
+Array
+(
+    [0] => 1
+    [1] => 2
+)
+
+
+month - webinarAction:
+Array
+(
+    [0] => 5
+    [1] => 6
+)
+
+

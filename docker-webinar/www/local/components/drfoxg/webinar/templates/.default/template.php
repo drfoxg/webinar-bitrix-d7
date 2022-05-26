@@ -6,13 +6,13 @@ echo 'пример'.'<br/>';
 echo $this->getComponent()->arResult['DATE'];
 echo 'Темы'.'<br/>';
 echo $this->getComponent()->arParams['THEMES'];
-dump($this->getComponent()->arParams['THEMES']);
-dump($this->getComponent()->arResult['THEMES']);
+//dump($this->getComponent()->arParams['THEMES']);
+//dump($this->getComponent()->arResult['THEMES']);
 echo '<br/>';
 echo 'Месяцы'.'<br/>';
 print_r($this->getComponent()->arParams['MONTHS']);
-dump($this->getComponent()->arParams['MONTHS']);
-dump($this->getComponent()->arResult['MONTHS']);
+//dump($this->getComponent()->arParams['MONTHS']);
+//dump($this->getComponent()->arResult['MONTHS']);
 echo '<br/>';
 
 ShowNote('Component "' . $this->getComponent()->getName() . '" connected.');

@@ -8,14 +8,16 @@ use \SomeModule\Webinar\RemDebug;
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 
+//if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
+
 $APPLICATION->IncludeComponent(
-    'drfoxg:webinar',
-    '.default',
-    [
-        "THEMES" => [1,2],
-        "MONTH" => [5,6]
-    ],
-    false
+    "drfoxg:webinar",
+    "",
+    Array(
+        "INFOBLOCKID" => "23",
+        "MONTHS" => array("1","10","11","12"),
+        "THEMES" => "1,2"
+    )
 );
 
 //require_once($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/SomeModule/Webinar/RemDebug.php");
@@ -45,7 +47,7 @@ $month = 6;
  * @return array|string[]
  * @throws Exception
  */
-function getDataFiltered(array $months): array
+function getDateFiltered(array $months): array
 {
     $count = count($months);
 
@@ -118,9 +120,9 @@ function doThemeFilter(array &$arFilter, array $themes) : void
     }
 }
 
-dump(getDataFiltered($monthNumbers));
+dump(getDateFiltered($monthNumbers));
 
-$arFilter[] = getDataFiltered($monthNumbers);
+$arFilter[] = getDateFiltered($monthNumbers);
 doThemeFilter($arFilter, $themeNumbers);
 $arFilter['=ACTIVE'] = 'Y';
 

@@ -91,10 +91,6 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
      */
     private function convertToInt(array $data):array
     {
-        /*
-        Debug::dumpToFile($data, '$data - convertToInt');
-        $data = explode(',', $data);
-        */
         $size = count($data);
         for ($i = 0; $i < $size; $i++) {
             $data[$i] = (int)$data[$i];
@@ -103,8 +99,6 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
                 throw new Exception('Wrong input data');
             }
         }
-
-        Debug::dumpToFile($data, '$data - convertToInt');
 
         return $data;
     }
@@ -119,7 +113,13 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
             return 'ajax';
         }
 
-        Debug::writeToFile($this->request->isAjaxRequest(), 'on prepareAction - ret init');
+        if ($this->request->isPost()) {
+            Debug::writeToFile($this->request->isPost(), 'on prepareAction - ret htmlmodel');
+            $this->request->getPostList();
+        }
+
+        Debug::writeToFile(null, 'on prepareAction - ret init');
+
         return 'init';
     }
 

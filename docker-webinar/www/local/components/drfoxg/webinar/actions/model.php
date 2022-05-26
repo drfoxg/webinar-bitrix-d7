@@ -6,6 +6,7 @@ use \Drfoxg\Webinar\Webinar;
 use \Bitrix\Main\Diag\Debug;
 use \Bitrix\Iblock\Iblock;
 use \Bitrix\Main\Loader;
+use Protobuf\Exception;
 
 /**
  * Class Model - модель вебинаров
@@ -19,8 +20,8 @@ class Model extends Webinar
      * @return bool
      */
     private $parent;
-    private const DATASOURCE = 1;
-    //private const DATASOURCE = 23;
+    //private const DATASOURCE = 1;
+    private const DATASOURCE = 23;
 
     public function __construct(\CBitrixComponent $oComponent)
     {
@@ -35,14 +36,19 @@ class Model extends Webinar
      */
     protected function do()
     {
-        Loader::includeModule("iblock");
+        if(!Loader::includeModule("iblock")) {
+            throw new Exception(GetMessage('IBLOCK_MODULE_NOT_INSTALLED'));
 
+        }
+
+        // подготовка данных
         $themes = $this->parent->getThemes();
         $month = $this->parent->getMonths();
 
         $webinars = Iblock::wakeUp(self::DATASOURCE)->getEntityDataClass();
 
-        $arFilter[] = $this->getDataFiltered($month);
+        // подготовка фильтров запроса
+        $arFilter[] = $this->getDateFiltered($month);
         $this->doThemeFilter($arFilter, $themes);
         $arFilter['=ACTIVE'] = 'Y';
 
@@ -59,7 +65,7 @@ class Model extends Webinar
      * @return array|string[]
      * @throws Exception
      */
-    private function getDataFiltered(array $months): array
+    private function getDateFiltered(array $months): array
     {
         $count = count($months);
 

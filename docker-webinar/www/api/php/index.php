@@ -7,13 +7,6 @@
 
 $lsRes = `ls -al ../../`;
 
-enum Suit
-{
-    case Hearts;
-    case Diamonds;
-    case Clubs;
-    case Spades;
-}
 ?>
 
 <!doctype html>
@@ -37,8 +30,6 @@ enum Suit
         echo '<pre>';
         print_r($lsRes);
         echo '</pre>';
-
-        echo Suit::Hearts;
     ?>
 </body>
 </html>

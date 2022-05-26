@@ -6,7 +6,7 @@ $APPLICATION->SetTitle("Title");
 	"drfoxg:webinar",
 	"",
 	Array(
-		"INFOBLOCKID" => "1",
+		"INFOBLOCKID" => "23",
 		"MONTHS" => array("1","10","11","12"),
 		"THEMES" => "1,2"
 	)

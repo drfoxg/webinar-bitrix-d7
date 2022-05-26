@@ -106,74 +106,6 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
         return $this->doAction($sAction);
     }
 
-    /**
-     * Получаем доступ к помощникам компонента
-     * @param string $sName
-     * @return object|null
-     */
-    protected function getHelper($sName = '')
-    {
-        try {
-            $this->loadModules();
-        } catch (\Exception $e) {
-            ShowError($e->getMessage());
-            die;
-        }
-
-        $sFileName = lcfirst($sName) . '.php';
-
-        if (file_exists(dirname(__FILE__) . '/helpers/' . $sFileName)
-            && include_once 'helpers/' . $sFileName) {
-            $sClassNameSpace = __NAMESPACE__ . '\Helpers\\' . ucfirst($sName);
-
-            return new $sClassNameSpace;
-        }
-
-        return null;
-    }
-
-    /**
-     * Формируем метод обработки события
-     * @param string $sAction
-     * @return string
-     */
-    private function doAction($sAction)
-    {
-        $sFileName = $sAction . '.php';
-
-        if (file_exists(dirname(__FILE__) . '/actions/' . $sFileName)
-            && include_once 'actions/' . $sFileName) {
-            $sClassNameSpace = __NAMESPACE__ . '\Actions\\' . ucfirst($sAction);
-
-            $oObject = new $sClassNameSpace($this);
-
-            if (is_callable([$oObject, 'do'])) {
-                return call_user_func([$oObject, 'do']);
-            }
-        }
-
-        return '';
-    }
-
-
-    /**
-     * Подключаем модули
-     * @return bool
-     * @throws LoaderException
-     */
-    private function loadModules()
-    {
-        if ($this->arModules) {
-            foreach ($this->arModules as $sModule) {
-                if (!Loader::includeModule($sModule)) {
-                    throw new LoaderException('Module "' . $sModule . '" was not initialized.');
-                }
-            }
-        }
-
-        return true;
-    }
-
     public function getErrors(): array
     {
         return $this->errorCollection->toArray();
@@ -235,6 +167,8 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
             Debug::writeToFile($theme, 'theme - webinarAction');
             Debug::writeToFile($month, 'month - webinarAction');
 
+            $this->doAction('model');
+
             return [
                 'asd' => $theme,
                 'dsa' => $month,
@@ -247,5 +181,72 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
             ];
         }
 
+    }
+
+    /**
+     * Формируем метод обработки события
+     * @param string $sAction
+     * @return string
+     */
+    private function doAction($sAction)
+    {
+        $sFileName = $sAction . '.php';
+
+        if (file_exists(dirname(__FILE__) . '/actions/' . $sFileName)
+            && include_once 'actions/' . $sFileName) {
+            $sClassNameSpace = __NAMESPACE__ . '\Actions\\' . ucfirst($sAction);
+
+            $oObject = new $sClassNameSpace($this);
+
+            if (is_callable([$oObject, 'do'])) {
+                return call_user_func([$oObject, 'do']);
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Подключаем модули
+     * @return bool
+     * @throws LoaderException
+     */
+    private function loadModules()
+    {
+        if ($this->arModules) {
+            foreach ($this->arModules as $sModule) {
+                if (!Loader::includeModule($sModule)) {
+                    throw new LoaderException('Module "' . $sModule . '" was not initialized.');
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Получаем доступ к помощникам компонента
+     * @param string $sName
+     * @return object|null
+     */
+    protected function getHelper($sName = '')
+    {
+        try {
+            $this->loadModules();
+        } catch (\Exception $e) {
+            ShowError($e->getMessage());
+            die;
+        }
+
+        $sFileName = lcfirst($sName) . '.php';
+
+        if (file_exists(dirname(__FILE__) . '/helpers/' . $sFileName)
+            && include_once 'helpers/' . $sFileName) {
+            $sClassNameSpace = __NAMESPACE__ . '\Helpers\\' . ucfirst($sName);
+
+            return new $sClassNameSpace;
+        }
+
+        return null;
     }
 }

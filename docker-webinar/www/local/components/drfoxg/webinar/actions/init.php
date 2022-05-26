@@ -14,7 +14,7 @@ use Drfoxg\Webinar\Webinar;
 class Init extends Webinar
 {
 
-    public array $arResult;
+    //public array $arResult;
 
     /**
      * Init constructor.

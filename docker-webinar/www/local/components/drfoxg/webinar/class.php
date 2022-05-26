@@ -2,6 +2,7 @@
 
 namespace Drfoxg\Webinar;
 
+use \Bitrix\Main\DB\Exception;
 use \Bitrix\Main\LoaderException;
 use \Bitrix\Main\Loader;
 use \Bitrix\Main\Error;
@@ -31,6 +32,82 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
         "iblock",
     ];
 
+    private array $themes;
+    private array $months;
+    private array $webinars;
+
+    /**
+     * @return array
+     */
+    public function getThemes(): array
+    {
+        return $this->themes;
+    }
+
+    /**
+     * @param array $themes
+     */
+    public function setThemes(array $themes): void
+    {
+        $this->themes = $themes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMonths(): array
+    {
+        return $this->months;
+    }
+
+    /**
+     * @param array $months
+     */
+    public function setMonths(array $months): void
+    {
+        $this->months = $months;
+    }
+
+    /**
+     * @param array $themes
+     */
+    public function getWebinars(): array
+    {
+        return $this->webinars;
+    }
+
+    /**
+     * @param array $themes
+     */
+    public function setWebinars(array $webinars): void
+    {
+        $this->webinars = $webinars;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    private function convertToInt(array $data):array
+    {
+        /*
+        Debug::dumpToFile($data, '$data - convertToInt');
+        $data = explode(',', $data);
+        */
+        $size = count($data);
+        for ($i = 0; $i < $size; $i++) {
+            $data[$i] = (int)$data[$i];
+
+            if ($data[$i] === 0) {
+                throw new Exception('Wrong input data');
+            }
+        }
+
+        Debug::dumpToFile($data, '$data - convertToInt');
+
+        return $data;
+    }
     /**
      * Обработка событий компонента
      * @return string
@@ -120,15 +197,12 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
     {
         // TODO: Implement configureActions() method.
         return [
+            /*
             'test' => [
-                'prefilters' => [
-                    /*
-                    new ActionFilter\HttpMethod(array(ActionFilter\HttpMethod::METHOD_POST)),
-                    new ActionFilter\Csrf()
-                    */
-                ],
+                'prefilters' => [],
                 'postfilters' => [],
             ],
+            */
             'webinar' => [
                 'postfilters' => [],
                 'prefilters' => []
@@ -137,37 +211,14 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
     }
 
     //public function testAction($data)
+    /*
     public function testAction(string $theme, string $month) :array
-    {
-        try {
-        //Debug::writeToFile($data, 'data - webinarAction');
-
-        Debug::writeToFile($theme, 'theme - testAction');
-        Debug::writeToFile($month, 'month - testAction');
-
-        return [
-            'asd' => $theme,
-            'dsa' => $month,
-            'count' => 200
-        ];
-        } catch (Exceptions $e) {
-            $this->errorCollection[] = new Error($e->getMessage());
-            return [
-                "result" => "Произошла ошибка",
-            ];
-        }
-
-    }
-
-    public function webinarAction(array $theme, array $month) :array
     {
         try {
             //Debug::writeToFile($data, 'data - webinarAction');
 
-            Debug::writeToFile($theme, 'theme - webinarAction');
-            Debug::writeToFile($month, 'month - webinarAction');
-
-            $this->doAction('model');
+            Debug::writeToFile($theme, 'theme - testAction');
+            Debug::writeToFile($month, 'month - testAction');
 
             return [
                 'asd' => $theme,
@@ -182,6 +233,47 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
         }
 
     }
+    */
+
+    public function webinarAction(array $theme = [], array $month = []) :array
+    {
+        try {
+            //Debug::writeToFile($data, 'data - webinarAction');
+
+            Debug::dumpToFile($theme, 'theme - webinarAction');
+            Debug::dumpToFile($month, 'month - webinarAction');
+
+            $theme = $this->convertToInt($theme);
+            $month = $this->convertToInt($month);
+
+            $this->setThemes($theme);
+            $this->setMonths($month);
+
+            Debug::dumpToFile($this->getThemes(), 'theme - webinarAction');
+            Debug::dumpToFile($this->getMonths(), 'month - webinarAction');
+
+            $this->doAction('model');
+            /*
+            return [
+
+                'themeRet' => $this->getThemes(),
+                'monthRet' => $this->getMonths(),
+                'webinarsRet' => $this->getWebinars()
+
+            ];
+            */
+
+            return $this->getWebinars();
+
+        } catch (Exceptions $e) {
+            $this->errorCollection[] = new Error($e->getMessage());
+            return [
+                "result" => "Произошла ошибка",
+            ];
+        }
+
+    }
+
 
     /**
      * Формируем метод обработки события

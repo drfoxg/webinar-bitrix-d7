@@ -41,6 +41,10 @@ class Init extends Webinar
     {
         $this->arResult['DATE'] = date('Y-m-d');
 
+        $themesAsString = $this->arParams['THEMES'];
+        $this->arResult['THEMES'] = array_map('intval', explode(',', $themesAsString));
+        $this->arResult['MONTHS'] = array_map('intval', $this->arParams['MONTHS']);
+
         $this->includeComponentTemplate();
 
 

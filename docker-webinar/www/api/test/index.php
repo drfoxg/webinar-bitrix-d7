@@ -33,8 +33,8 @@
         };
 
         var data = {
-            theme: [1, 2],
-            month: [5, 6],
+            theme: [],
+            month: [7],
             SITE_ID: 's1',
             //sessid: BX.message('bitrix_sessid')
         };

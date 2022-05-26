@@ -11,7 +11,10 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_befo
 $APPLICATION->IncludeComponent(
     'drfoxg:webinar',
     '.default',
-    [],
+    [
+        "THEMES" => [1,2],
+        "MONTH" => [5,6]
+    ],
     false
 );
 
@@ -42,7 +45,7 @@ $month = 6;
  * @return array|string[]
  * @throws Exception
  */
-function getDataFilter(array $months): array
+function getDataFiltered(array $months): array
 {
     $count = count($months);
 
@@ -51,7 +54,7 @@ function getDataFilter(array $months): array
     }
 
     if ($count == 1) {
-        return formatStartEnd($months[0], '>=DATA.VALUE', '<=DATA.VALUE');
+        return formatStartEnd($months[0], '>=DATE.VALUE', '<=DATE.VALUE');
     }
 
     $filter = [
@@ -59,7 +62,7 @@ function getDataFilter(array $months): array
     ];
 
     foreach ($months as $month) {
-        array_push($filter, formatStartEnd($month, '>=DATA.VALUE', '<=DATA.VALUE'));
+        array_push($filter, formatStartEnd($month, '>=DATE.VALUE', '<=DATE.VALUE'));
     }
 
     return $filter;
@@ -115,9 +118,9 @@ function doThemeFilter(array &$arFilter, array $themes) : void
     }
 }
 
-dump(getDataFilter($monthNumbers));
+dump(getDataFiltered($monthNumbers));
 
-$arFilter[] = getDataFilter($monthNumbers);
+$arFilter[] = getDataFiltered($monthNumbers);
 doThemeFilter($arFilter, $themeNumbers);
 $arFilter['=ACTIVE'] = 'Y';
 
@@ -129,7 +132,7 @@ dump($arFilter);
 Application::getConnection()->startTracker(false);
 
 $catalogSectionsIterator = $webinars::getList([
-    'select' => ['ID', 'NAME', 'DATA', 'THEME_ID.ELEMENT'],
+    'select' => ['ID', 'NAME', 'DATE', 'THEME_ID.ELEMENT'],
     'filter' => $arFilter,
     'order'  => ['ID' => 'ASC'],
 ]);
@@ -146,7 +149,7 @@ $debug = new CDebugInfo();
 $debug->Start();
 
 $elements =  $webinars::getList([
-    'select' => ['ID', 'NAME', 'DATA', 'THEME_ID.ELEMENT'],
+    'select' => ['ID', 'NAME', 'DATE', 'THEME_ID.ELEMENT'],
     'filter' => $arFilter,
     'order'  => ['ID' => 'ASC'],
 ])->fetchCollection();

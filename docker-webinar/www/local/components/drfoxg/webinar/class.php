@@ -25,6 +25,12 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
     protected ErrorCollection $errorCollection;
 
     /**
+     * iblock Вебинары
+     */
+    //private const DATASOURCE = 1;
+    protected const DATASOURCE = 23;
+
+    /**
      * Подключаемые модули
      * @var array
      */
@@ -115,11 +121,19 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
 
         if ($this->request->isPost()) {
             Debug::writeToFile($this->request->isPost(), 'on prepareAction - ret htmlmodel');
-            $this->request->getPostList();
+
+            $errors = array();
+            $input = array();
+            try {
+                $input = \Bitrix\Main\Web\Json::decode($this->request->getInput());
+                Debug::writeToFile($input, 'on prepareAction - $input');
+            } catch (Exception $e) {
+                $errors[] = $e->getMessage();
+            }
+
         }
 
         Debug::writeToFile(null, 'on prepareAction - ret init');
-
         return 'init';
     }
 
@@ -161,8 +175,6 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
      */
     public function executeComponent()
     {
-        Debug::writeToFile(null, 'executeComponent');
-
         try {
             $this->loadModules();
         } catch (\Exception $e) {
@@ -195,14 +207,7 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
 
     public function configureActions()
     {
-        // TODO: Implement configureActions() method.
         return [
-            /*
-            'test' => [
-                'prefilters' => [],
-                'postfilters' => [],
-            ],
-            */
             'webinar' => [
                 'postfilters' => [],
                 'prefilters' => []
@@ -210,38 +215,9 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
         ];
     }
 
-    //public function testAction($data)
-    /*
-    public function testAction(string $theme, string $month) :array
-    {
-        try {
-            //Debug::writeToFile($data, 'data - webinarAction');
-
-            Debug::writeToFile($theme, 'theme - testAction');
-            Debug::writeToFile($month, 'month - testAction');
-
-            return [
-                'asd' => $theme,
-                'dsa' => $month,
-                'count' => 200
-            ];
-        } catch (Exceptions $e) {
-            $this->errorCollection[] = new Error($e->getMessage());
-            return [
-                "result" => "Произошла ошибка",
-            ];
-        }
-
-    }
-    */
-
     public function webinarAction(array $theme = [], array $month = []) :array
     {
         try {
-            //Debug::writeToFile($data, 'data - webinarAction');
-
-            Debug::dumpToFile($theme, 'theme - webinarAction');
-            Debug::dumpToFile($month, 'month - webinarAction');
 
             $theme = $this->convertToInt($theme);
             $month = $this->convertToInt($month);
@@ -249,19 +225,7 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
             $this->setThemes($theme);
             $this->setMonths($month);
 
-            Debug::dumpToFile($this->getThemes(), 'theme - webinarAction');
-            Debug::dumpToFile($this->getMonths(), 'month - webinarAction');
-
             $this->doAction('model');
-            /*
-            return [
-
-                'themeRet' => $this->getThemes(),
-                'monthRet' => $this->getMonths(),
-                'webinarsRet' => $this->getWebinars()
-
-            ];
-            */
 
             return $this->getWebinars();
 
@@ -271,7 +235,6 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
                 "result" => "Произошла ошибка",
             ];
         }
-
     }
 
 

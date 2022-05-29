@@ -41,30 +41,3 @@ $arComponentParameters = array(
         ),
     )
 );
-    /*
-    array(
-    "GROUPS" => array(
-        "BASE" => array(
-            "NAME" => GetMessage("T_BASE_PHR")
-        ),
-        "DATA_SOURCE" => array(
-            "NAME" => GetMessage("T_DATA_SOURCE_PHR")
-        ),
-        "PARAMETERS" => array(
-            "IBLOCK_TYPE_ID" => array(
-                "PARENT" => "BASE",
-                "NAME" => GetMessage("T_IBLOCK_DESC_PHR"),
-                "TYPE" => "STRING",
-                "VALUES" => 1,
-                "REFRESH" => "Y"
-            ),
-            "IBLOCK_TYPE_IDD" => array(
-                "PARENT" => "DATA_SOURCE",
-                "NAME" => GetMessage("T_IBLOCK_DESC_PHR"),
-                "TYPE" => "STRING",
-                "VALUES" => 1,
-                "REFRESH" => "Y"
-            ),
-        ),
-    ),
-);*/

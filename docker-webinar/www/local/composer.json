@@ -16,7 +16,8 @@
         "ext-soap": "*",
         "ext-exif": "*",
         "ext-zip": "*",
-        "falbar/bitrix": "1.*"
+        "falbar/bitrix": "1.*",
+        "konekt/enum": "^3.1"
     },
     "autoload": {
         "psr-4": {

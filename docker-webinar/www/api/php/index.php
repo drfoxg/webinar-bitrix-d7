@@ -1,4 +1,7 @@
 <?php
+// Включаем строгую типизацию
+declare(strict_types = 1);
+
 //use \Bitrix\Main\Config\Configuration;
 
 //require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
@@ -27,10 +30,37 @@ $lsRes = `ls -al ../../`;
 </head>
 <body>
     <?php
+
+
         echo '<pre>';
         print_r($lsRes);
         echo '</pre>';
+
+
+        function throwException(int $i) {
+            //throw new Exception('Not set!') ;
+
+            if (is_string($i)) {
+                echo 'true <br/>';
+            } else {
+                echo 'false <br/>';
+            }
+        }
+
+        $id = $_GET['id'] ?? throwException("123");
+
+        $id = isset($_GET['id']) ? $_GET['id'] : throwException("123");
+
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+        } else {
+            //throw new Exception('Not set!');
+        }
+
     ?>
+
+    <p>===</p>
+    <p>Конец страницы.</p>
 </body>
 </html>
 

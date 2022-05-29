@@ -3,6 +3,7 @@
 namespace Drfoxg\Webinar\Actions;
 
 use \Drfoxg\Webinar\Webinar;
+use \Drfoxg\Webinar\Helpers;
 use \Bitrix\Main\Diag\Debug;
 use \Bitrix\Iblock\Iblock;
 use \Bitrix\Main\Loader;
@@ -27,6 +28,8 @@ class Model extends Webinar
     {
         parent::__construct($oComponent);
         $this->parent = $oComponent;
+
+        $this->getHelper('month');
 
         return true;
     }
@@ -100,8 +103,7 @@ class Model extends Webinar
     private function formatStartEnd(int $month, string $conditionStar, string $conditionEnd, string $year = '') : array
     {
         // валидация входных данных
-        // TODO: добавить константы месяцев
-        if (!((1 <= $month) && ($month <= 12))) {
+        if (!Helpers\Month::has($month)) {
             throw new \Exception("Not month");
         }
 

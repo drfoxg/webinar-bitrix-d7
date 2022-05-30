@@ -61,18 +61,19 @@ class Init extends Webinar
     }
 
     /**
+     * Получить из входных параметров компонента массивы из целых чисел
      * @param array $month
      * @param string $themesAsString
      * @return array
      */
     private function getIntParams(array $month, string $themesAsString) : array
     {
-        $result['months'] = array_map('intval', $month);
+        $result['months'] = $this->parent->convertToInt($month);
 
         if (empty($themesAsString)) {
             $result['themes'] = [];
         } else {
-            $result['themes'] = array_map('intval', explode(',', $themesAsString));
+            $result['themes'] = $this->parent->convertToInt(explode(',', $themesAsString));
         }
 
         return $result;

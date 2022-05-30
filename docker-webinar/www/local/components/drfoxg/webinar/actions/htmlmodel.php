@@ -8,8 +8,7 @@ use \Bitrix\Main\Diag\Debug;
 use \Bitrix\Iblock\Iblock;
 use \Bitrix\Main\Loader;
 use \Bitrix\Main\Web\Json;
-use Protobuf\Exception;
-
+//use Protobuf\Exception;
 
 class HtmlModel extends Webinar
 {
@@ -38,23 +37,14 @@ class HtmlModel extends Webinar
     protected function do()
     {
         if(!Loader::includeModule("iblock")) {
-            throw new Exception(GetMessage('IBLOCK_MODULE_NOT_INSTALLED'));
+            throw new \Exception(GetMessage('IBLOCK_MODULE_NOT_INSTALLED'));
         }
 
-        $errors = [];
-        $decodedData = [];
-
-        if ($this->parent->request->getHeader('Content-Type') != 'application/json') {
-            return true;
+        if ($this->parent->request->getHeaders()->getContentType() != 'application/json') {
+            return false;
         }
 
-        //try {
         $decodedData = Json::decode($this->parent->request->getInput());
-        Debug::writeToFile($decodedData, 'on prepareAction - $input');
-        //} catch (\Bitrix\Main\DB\Exception $e) {
-        //    $errors[] = $e->getMessage();
-        //}
-
 
         $common = $this->common;
 

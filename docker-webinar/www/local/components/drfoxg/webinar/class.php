@@ -27,15 +27,15 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
     /**
      * iblock Вебинары
      */
-    protected const DATA_SOURCE = 1;
-    //protected const DATA_SOURCE = 23;
+    //protected const DATA_SOURCE = 1;
+    protected const DATA_SOURCE = 23;
 
     /**
      * Подключаемые модули
      * @var array
      */
     private $arModules = [
-        "iblock",
+        'iblock'
     ];
 
     private array $themes;
@@ -91,6 +91,7 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
     }
 
     /**
+     * Отбросить строки и числа меньше нуля
      * @param array $data
      * @return array
      * @throws Exception
@@ -102,12 +103,13 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
             $data[$i] = (int)$data[$i];
 
             if ($data[$i] <= 0) {
-                throw new Exception('Wrong input data');
+                throw new Exception(GetMessage('T_NOT_INTEGER'));
             }
         }
 
         return $data;
     }
+
     /**
      * Обработка событий компонента
      * @return string
@@ -183,7 +185,11 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
             return false;
         }
 
-        return $this->doAction($sAction);
+        try {
+            return $this->doAction($sAction);
+        } catch (\Throwable $e) {
+            ShowError($e->getMessage());
+        }
     }
 
     public function getErrors(): array
@@ -228,7 +234,6 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
         }
     }
 
-
     /**
      * Формируем метод обработки события
      * @param string $sAction
@@ -236,6 +241,7 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
      */
     private function doAction($sAction)
     {
+
         $sFileName = $sAction . '.php';
 
         if (file_exists(dirname(__FILE__) . '/actions/' . $sFileName)
@@ -262,7 +268,7 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
         if ($this->arModules) {
             foreach ($this->arModules as $sModule) {
                 if (!Loader::includeModule($sModule)) {
-                    throw new LoaderException('Module "' . $sModule . '" was not initialized.');
+                    throw new LoaderException(GetMessage('T_ERROR_MODULE_NOT_FOUND', ['#MODULE#' => $sModule]));
                 }
             }
         }

@@ -105,7 +105,7 @@ class Common
     {
         // валидация входных данных
         if (!Month::has($month)) {
-            throw new \Exception("Not month");
+            throw new \Exception(GetMessage('T_NOT_MONTH'));
         }
 
         if ($year === '') {

@@ -27,8 +27,8 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
     /**
      * iblock Вебинары
      */
-    //private const DATASOURCE = 1;
-    protected const DATASOURCE = 23;
+    protected const DATA_SOURCE = 1;
+    //protected const DATA_SOURCE = 23;
 
     /**
      * Подключаемые модули
@@ -95,13 +95,13 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
      * @return array
      * @throws Exception
      */
-    private function convertToInt(array $data):array
+    protected function convertToInt(array $data):array
     {
         $size = count($data);
         for ($i = 0; $i < $size; $i++) {
             $data[$i] = (int)$data[$i];
 
-            if ($data[$i] === 0) {
+            if ($data[$i] <= 0) {
                 throw new Exception('Wrong input data');
             }
         }
@@ -121,16 +121,7 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
 
         if ($this->request->isPost()) {
             Debug::writeToFile($this->request->isPost(), 'on prepareAction - ret htmlmodel');
-
-            $errors = array();
-            $input = array();
-            try {
-                $input = \Bitrix\Main\Web\Json::decode($this->request->getInput());
-                Debug::writeToFile($input, 'on prepareAction - $input');
-            } catch (Exception $e) {
-                $errors[] = $e->getMessage();
-            }
-
+            return 'htmlmodel';
         }
 
         Debug::writeToFile(null, 'on prepareAction - ret init');

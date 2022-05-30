@@ -49,7 +49,7 @@ class Model extends Webinar
         $themes = $this->parent->getThemes();
         $month = $this->parent->getMonths();
 
-        $webinars = Iblock::wakeUp(self::DATASOURCE)->getEntityDataClass();
+        $webinars = Iblock::wakeUp(self::DATA_SOURCE)->getEntityDataClass();
 
         // подготовка фильтров запроса
         $arFilter[] = $common->getDateFiltered($month);

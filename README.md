@@ -58,8 +58,8 @@ USERID 1000 - это как правило единственный и перв�
 GROUPID 33 - это группа www-data пользователя Apache.   
 
 ## Работа приложения
-POST запрос с json в body на /api/v1/
-AJAX запрос с x-www-form-urlencoded на /bitrix/services/main/ajax.php?c=drfoxg:webinar&action=webinar&mode=class  
+POST запрос с json в body на /api/v1/, ответ в HTML  
+AJAX запрос с x-www-form-urlencoded на /bitrix/services/main/ajax.php?c=drfoxg:webinar&action=webinar&mode=class, ответ в JSON  
 Пример запроса на jquery находится по адресу /api/test/index.php  
 
 Для тестировиня через POSTMAN:  

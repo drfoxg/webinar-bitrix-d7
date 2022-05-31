@@ -28,7 +28,8 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
      * iblock Вебинары
      */
     //protected const DATA_SOURCE = 1;
-    protected const DATA_SOURCE = 23;
+    protected const DATA_SOURCE = 2;
+    //protected const DATA_SOURCE = 23;
 
     /**
      * Подключаемые модули

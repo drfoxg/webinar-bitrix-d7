@@ -1,4 +1,4 @@
-<?
+23<?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Title");
 ?>
@@ -6,7 +6,7 @@ $APPLICATION->SetTitle("Title");
 	"drfoxg:webinar",
 	"",
 	Array(
-		"INFOBLOCKID" => "23",
+		"INFOBLOCKID" => "2",
 		"MONTHS" => [],
 		"THEMES" => ""
 	)

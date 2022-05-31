@@ -10,7 +10,7 @@ $APPLICATION->IncludeComponent(
     "drfoxg:webinar",
     "",
     Array(
-        "INFOBLOCKID" => "23",
+        "INFOBLOCKID" => "2",
         "MONTHS" => [],
         "THEMES" => ""
     )

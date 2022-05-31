@@ -5,7 +5,7 @@ version: "3.7"
 services:
   # MySQL container
   mysqlwebinar:
-    # Use mysql:latest image
+    # Use mysql:latest image (8.x)
     image: mysql:latest
     # Data folder
     volumes:
@@ -25,7 +25,7 @@ services:
     # Connect to "drfoxg-net" network, as defined below
     networks:
       - drfoxg-net
-    # Map port 8080 on the host to port 80 inside the container
+    # Map port 8082 on the host to port 80 inside the container
     # Syntax is: "HOST_PORT:CONTAINER_PORT"
     ports:
       - "8082:80"

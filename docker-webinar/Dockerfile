@@ -116,6 +116,8 @@ RUN sed -i 's/<VirtualHost\ \*:80>/<VirtualHost\ 62.109.24.91:80>/' /etc/apache2
 RUN sed -i '/DocumentRoot/ a <Directory\ \/var\/www\/html>\n AllowOverride\ All \n<\/Directory>' /etc/apache2/sites-available/000-default.conf
 
 RUN a2ensite 000-default
-RUN service apache2 restart
+RUN service apache2 start
+#RUN service apache2 reload
 
 CMD ["apachectl", "-DFOREGROUND"]
+#ENTRYPOINT ["/bin/bash"]

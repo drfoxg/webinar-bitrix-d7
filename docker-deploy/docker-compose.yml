@@ -15,27 +15,9 @@ services:
       - bitrix-net
     # Pass a list of environment variables to the container
     environment:
-      MYSQL_ROOT_PASSWORD: db5991bd
+      MYSQL_ROOT_PASSWORD: secret
       TZ: Europe/Moscow
 
-  # phpMyAdmin container
-  phpmyadmin:
-    # Use phpmyadmin/phpmyadmin:latest image
-    image: phpmyadmin/phpmyadmin:latest
-    # Connect to "drfoxg-net" network, as defined below
-    networks:
-      - bitrix-net
-    # Map port 8082 on the host to port 80 inside the container
-    # Syntax is: "HOST_PORT:CONTAINER_PORT"
-    ports:
-      - "8082:80"
-    # Pass a list of environment variables to the container
-    environment:
-      PMA_HOST: mysqlwebinar
-    # Wait for "mysql" container to start first
-    depends_on:
-      - mysqlwebinar
-      
   # 1c-bitrix d7
   webinar:
     image: drfoxg/webinar

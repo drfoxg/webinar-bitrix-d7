@@ -58,7 +58,37 @@ USERID 1000 - это как правило единственный и перв�
 GROUPID 33 - это группа www-data пользователя Apache.   
 
 ## Работа приложения
-TODO:...
+POST запрос с json в body на /api/v1/
+AJAX запрос с x-www-form-urlencoded на /bitrix/services/main/ajax.php?c=drfoxg:webinar&action=webinar&mode=class  
+Пример запроса на jquery находится по адресу /api/test/index.php  
+
+Для тестировиня через POSTMAN:  
+
+Пример AJAX-запроса  
+1. Параметры:
+ - c = drfoxg:webinar
+ - action = webinar
+ - mode = class
+2. Заголовки:
+ - Accept = `*.*`
+ - X-Requested-With = XMLHttpRequest
+3. Тело:
+ - theme[0] = 1
+ - theme[1] = 2
+ - month[0] = 5
+ - month[1] = 6
+
+Пример POST-запроса  
+1. Параметры:
+2. Заголовки:
+ - Accept = `*.*`
+3. Тело:
+```json
+{
+    "theme": [1,2],
+    "month": [5,6]
+}
+```
 
 ## Остановка
 `sudo docker-compose down`

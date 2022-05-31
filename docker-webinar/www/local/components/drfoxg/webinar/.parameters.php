@@ -9,7 +9,8 @@ $arComponentParameters = array(
             "TYPE"      =>  "LIST",
             "VALUES"    =>  array(
                 "1" =>  "1",
-                "2" =>  "23",
+                "2" =>  "2",
+                "3" =>  "23",
             ),
             "MULTIPLE"  =>  "N",
         ),

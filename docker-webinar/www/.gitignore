@@ -5,3 +5,4 @@
 /local/vendor
 bitrix_server_test.log
 bitrix_server_test.php
+__bx_log.log

@@ -2,6 +2,7 @@
 
 namespace Drfoxg\Webinar\Helpers;
 
+use Bitrix\Iblock\Iblock;
 use Protobuf\Exception;
 
 /**
@@ -58,13 +59,19 @@ class Common
     }
 
     /**
-     * @param $webinars
+     * @param $data
      * @param $arFilter
      * @return array
      */
-    public function getData($webinars, $arFilter) : array
+    public function getData($data, $arFilter) : array
     {
-        $elements =  $webinars::getList([
+        $dataSource = Iblock::wakeUp($data)->getEntityDataClass();
+
+        if (is_null($dataSource)) {
+            throw new \Exception(GetMessage('T_NOT_INFOBLOCK'));
+        }
+
+        $elements =  $dataSource::getList([
             'select' => ['ID', 'NAME', 'DATE', 'THEME_ID.ELEMENT'],
             'filter' => $arFilter,
             'order'  => ['ID' => 'ASC'],

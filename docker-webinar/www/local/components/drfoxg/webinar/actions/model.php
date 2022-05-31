@@ -49,14 +49,12 @@ class Model extends Webinar
         $themes = $this->parent->getThemes();
         $month = $this->parent->getMonths();
 
-        $webinars = Iblock::wakeUp(self::DATA_SOURCE)->getEntityDataClass();
-
         // подготовка фильтров запроса
         $arFilter[] = $common->getDateFiltered($month);
         $common->doThemeFilter($arFilter, $themes);
         $arFilter['=ACTIVE'] = 'Y';
 
-        $this->parent->setWebinars($common->getData($webinars, $arFilter));
+        $this->parent->setWebinars($common->getData(self::DATA_SOURCE, $arFilter));
 
         return true;
     }

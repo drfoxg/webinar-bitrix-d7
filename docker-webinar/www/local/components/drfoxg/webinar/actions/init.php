@@ -46,14 +46,12 @@ class Init extends Webinar
         $this->arResult['MONTHS'] = $themesAndMonths['months'];
         $this->arResult['THEMES'] = $themesAndMonths['themes'];
 
-        $webinars = Iblock::wakeUp($this->arParams['INFOBLOCKID'])->getEntityDataClass();
-
         // подготовка фильтров запроса
         $arFilter[] = $common->getDateFiltered($themesAndMonths['months']);
         $common->doThemeFilter($arFilter, $themesAndMonths['themes']);
         $arFilter['=ACTIVE'] = 'Y';
 
-        $this->arResult['WEBINARS'] = $common->getData($webinars, $arFilter);
+        $this->arResult['WEBINARS'] = $common->getData($this->arParams['INFOBLOCKID'], $arFilter);
 
         $this->includeComponentTemplate();
 

@@ -52,15 +52,12 @@ class HtmlModel extends Webinar
         $themes = $this->parent->convertToInt($decodedData['theme']);
         $month = $this->parent->convertToInt($decodedData['month']);
 
-        $webinars = Iblock::wakeUp(self::DATA_SOURCE)->getEntityDataClass();
-
         // подготовка фильтров запроса
         $arFilter[] = $common->getDateFiltered($month);
         $common->doThemeFilter($arFilter, $themes);
         $arFilter['=ACTIVE'] = 'Y';
 
-
-        $this->arResult['WEBINARS'] = $common->getData($webinars, $arFilter);
+        $this->arResult['WEBINARS'] = $common->getData(self::DATA_SOURCE, $arFilter);
 
         $this->includeComponentTemplate();
 

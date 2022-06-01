@@ -13,7 +13,7 @@ use Protobuf\Exception;
  * Class Model - модель вебинаров
  * @package Drfoxg\Webinar\Actions
  */
-class Model extends Webinar
+class JsonModel extends Webinar
 {
     /**
      * Ajax constructor.

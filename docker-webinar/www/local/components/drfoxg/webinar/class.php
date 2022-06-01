@@ -223,7 +223,7 @@ class Webinar extends \CBitrixComponent implements Controllerable, Errorable
             $this->setThemes($theme);
             $this->setMonths($month);
 
-            $this->doAction('model');
+            $this->doAction('jsonmodel');
 
             return $this->getWebinars();
 

@@ -62,7 +62,7 @@ POST запрос с json в body на /api/v1/, ответ в HTML
 AJAX запрос с x-www-form-urlencoded на /bitrix/services/main/ajax.php?c=drfoxg:webinar&action=webinar&mode=class, ответ в JSON  
 Пример запроса на jquery находится по адресу /api/test/index.php  
 
-Для тестировиня через POSTMAN:  
+Для тестирования через POSTMAN:  
 
 Пример AJAX-запроса  
 1. Параметры:

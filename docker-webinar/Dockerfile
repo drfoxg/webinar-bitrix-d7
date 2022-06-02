@@ -107,7 +107,7 @@ COPY mpm.conf /etc/apache2/conf-available
 COPY webinar.conf /etc/apache2/sites-available
 
 RUN a2disconf other-vhosts-access-log
-#RUN a2enconf mpm
+RUN a2enconf mpm
 RUN a2enmod rewrite
 RUN a2ensite webinar
 RUN a2dissite 000-default
